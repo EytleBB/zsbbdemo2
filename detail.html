@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>战术详情</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 id="tacticName">战术详情</h1>
+  </header>
+  <main>
+    <div id="tacticInfo"></div>
+    <!-- 修改和删除按钮 -->
+    <button id="editBtn">修改战术</button>
+    <button id="deleteBtn">删除战术</button>
+  </main>
+  <script>
+    // 获取 URL 参数中传入的 id
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const tacticId = getQueryParam('id');
+    let currentTactic = null;
+    const tactics = JSON.parse(localStorage.getItem('tactics')) || [];
+    // 找到当前战术
+    currentTactic = tactics.find(item => item.id == tacticId);
+    if (!currentTactic) {
+      document.getElementById('tacticInfo').textContent = '未找到对应战术';
+    } else {
+      document.getElementById('tacticName').textContent = currentTactic.name;
+      const infoDiv = document.getElementById('tacticInfo');
+      infoDiv.innerHTML = `
+        <p><strong>描述：</strong>${currentTactic.description}</p>
+        <p><strong>细节：</strong>${currentTactic.details}</p>
+        <p><strong>指挥话术：</strong>${currentTactic.command}</p>
+        <p><strong>备注：</strong>${currentTactic.remarks}</p>
+      `;
+    }
+
+    // 修改战术：直接将当前战术的信息保存到 localStorage，再跳转到添加页面，或创建单独的编辑页面
+    document.getElementById('editBtn').onclick = function() {
+      // 简单做法：利用 prompt 修改名称（实际可扩展到完整表单）
+      const newName = prompt('修改战术名称：', currentTactic.name);
+      if (newName) {
+        currentTactic.name = newName;
+        // 更新战术数组并保存
+        const updatedTactics = tactics.map(item => item.id == currentTactic.id ? currentTactic : item);
+        localStorage.setItem('tactics', JSON.stringify(updatedTactics));
+        location.reload();
+      }
+    };
+
+    // 删除战术：确认后删除并返回首页
+    document.getElementById('deleteBtn').onclick = function() {
+      if (confirm('确定删除该战术吗？')) {
+        const updatedTactics = tactics.filter(item => item.id != currentTactic.id);
+        localStorage.setItem('tactics', JSON.stringify(updatedTactics));
+        location.href = 'index.html';
+      }
+    };
+  </script>
+</body>
+</html>
