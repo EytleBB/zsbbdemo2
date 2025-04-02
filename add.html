@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>添加战术</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>添加战术</h1>
+  </header>
+  <main>
+    <form id="tacticForm">
+      <label>
+        战术名称：
+        <input type="text" name="name" required>
+      </label>
+      <label>
+        描述：
+        <textarea name="description" required></textarea>
+      </label>
+      <label>
+        细节：
+        <textarea name="details" required></textarea>
+      </label>
+      <label>
+        指挥话术：
+        <textarea name="command" required></textarea>
+      </label>
+      <label>
+        备注：
+        <textarea name="remarks"></textarea>
+      </label>
+      <button type="submit">保存</button>
+    </form>
+  </main>
+  <script>
+    document.getElementById('tacticForm').addEventListener('submit', function(e) {
+      e.preventDefault();  // 阻止表单默认提交
+      // 获取表单数据
+      const formData = new FormData(this);
+      const newTactic = {
+        id: Date.now(),  // 用当前时间戳作为简单的唯一 id
+        name: formData.get('name'),
+        description: formData.get('description'),
+        details: formData.get('details'),
+        command: formData.get('command'),
+        remarks: formData.get('remarks')
+      };
+
+      // 读取现有的战术数据
+      const tactics = JSON.parse(localStorage.getItem('tactics')) || [];
+      tactics.push(newTactic);
+      localStorage.setItem('tactics', JSON.stringify(tactics));
+      // 保存后跳转回首页
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
