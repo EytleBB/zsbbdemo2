@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>CS2 战术库</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>CS2 战术库</h1>
+  </header>
+  <main>
+    <!-- 添加战术按钮 -->
+    <button id="addTacticBtn" onclick="location.href='add.html'">添加战术</button>
+    <!-- 显示所有战术的区域 -->
+    <div id="tacticList"></div>
+  </main>
+  <script>
+    // 页面加载时，从 localStorage 中读取所有战术数据
+    window.onload = function() {
+      const tacticList = document.getElementById('tacticList');
+      tacticList.innerHTML = ''; // 清空列表
+      // 从 localStorage 读取数据（假设用 'tactics' 存储所有战术，以 JSON 格式存储）
+      const tactics = JSON.parse(localStorage.getItem('tactics')) || [];
+      tactics.forEach(tactic => {
+        // 为每个战术生成一个按钮，点击后跳转到详情页，并传递该战术的 id（使用 URL 参数）
+        const btn = document.createElement('button');
+        btn.textContent = tactic.name;
+        btn.onclick = () => {
+          location.href = `detail.html?id=${tactic.id}`;
+        };
+        tacticList.appendChild(btn);
+      });
+    };
+  </script>
+</body>
+</html>
